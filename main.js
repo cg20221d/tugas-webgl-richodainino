@@ -77,17 +77,25 @@ function draw() {
 		// 0.9, 0.1,
 		// 0.1, 0.1,
 
-		0.325, 0.7,	// A: ujung kiri atas
+		0.675, 0.65,// A: kanan atas
+		0.61, 0.76,
 		0.5, 0.8,		// B: tengah atas
-		0.675, 0.7,	// C
-		0.5, 0.5,		// D: tengah
-		0.675, 0.3,	// E
-		0.5, 0.2,		// F: tengah bawah
-		0.325, 0.3,	// G: ujung kiri bawah
+		0.39, 0.76,
+		0.325, 0.65,// C
+		0.325, 0.35,// D: kiri bawah
+		0.39, 0.25,
+		0.5, 0.2,		// E: tengah bawah
+		0.61, 0.25,
+		0.675, 0.35,
+		0.675, 0.45,// F
+		0.61, 0.55,
+		0.5, 0.6,		// G: tengah
+		0.39, 0.55,
+		0.325, 0.45,
 	]
 
 	drawA(gl.LINE_STRIP, number3Vertices)
-	drawA(gl.POINTS, number6Vertices)
+	drawA(gl.LINE_STRIP, number6Vertices)
 }
 
 function drawA(type, vertices) {

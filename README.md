@@ -1,0 +1,3 @@
+- NRP: 5025201236
+- Nama: Made Rianja Richo Dainino
+- String: 36no

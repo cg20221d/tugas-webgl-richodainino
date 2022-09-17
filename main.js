@@ -11,7 +11,7 @@ function main() {
 	void main() {
 		float x = aPosition.x;
 		float y = aPosition.y;
-		gl_PointSize = 10.0;
+		gl_PointSize = 5.0;
 		gl_Position = vec4(x, y, 0.0, 1.0);
 	}
 	`
@@ -94,8 +94,71 @@ function draw() {
 		0.325, 0.45,
 	]
 
+	var letterNVertices = [
+		// -0.9, -0.1,
+		// -0.1, -0.1,
+		// -0.1, -0.9,
+		// -0.9, -0.9,
+
+		// -0.675, -0.8,	// A: ujung kiri bawah
+		// -0.675, -0.2,	// B: ujung kiri atas
+		// -0.325, -0.8,	// C: ujung kanan bawah
+		// -0.325, -0.2,	// D: ujung kanan atas
+
+		// left part
+		-0.7, -0.8,
+		-0.65, -0.8,
+		-0.7, -0.2,
+		-0.65, -0.2,
+		-0.65, -0.8,
+		-0.7, -0.2,
+		
+		// mid part
+		-0.65, -0.2,
+		-0.65, -0.3,
+		-0.35, -0.8,
+		-0.35, -0.8,
+		-0.35, -0.7,
+		-0.65, -0.2,
+		
+		// right part
+		-0.35, -0.8,
+		-0.3, -0.8,
+		-0.35, -0.2,
+		-0.3, -0.2,
+		-0.3, -0.8,
+		-0.35, -0.2,
+	]
+
+	var letterOVertices = [
+		// 0.1, -0.1,
+		// 0.9, -0.1,
+		// 0.9, -0.9,
+		// 0.1, -0.9,
+
+		0.325, -0.8,	// A: ujung kiri bawah
+		0.325, -0.2,	// B: ujung kiri atas
+		0.5, -0.2,		// C: tengah atas
+		0.675, -0.2,	// D: ujung kanan atas
+		0.675, -0.8,	// E: ujung kanan bawah
+		0.5, -0.8,		// F: tengah bawah
+
+		// atas
+
+
+		// kiri
+
+
+		// bawah
+
+
+		// kanan
+	]
+
 	drawA(gl.LINE_STRIP, number3Vertices)
 	drawA(gl.LINE_STRIP, number6Vertices)
+	drawA(gl.TRIANGLES, letterNVertices)
+	drawA(gl.POINTS, letterOVertices)
 }
 
 function drawA(type, vertices) {

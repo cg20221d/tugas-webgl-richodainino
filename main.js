@@ -2,18 +2,34 @@ function main() {
 	/** @type {HTMLCanvasElement} */
 	const canvas = document.getElementById("canvas")
 	const gl = canvas.getContext("webgl")
-	
+
 	var vertices = [
-		0.0, 0.0,		// tengah
-		-0.5, 0.5,	// kiri atas
-		0.0, 1.0,		// atas
-		0.5, 0.5,		// kanan atas
-		0.0, 0.0, 	// tengah
-		0.5, -0.5,	// kanan bawah
-		0.0, -1.0,	// bawah
-		-0.5, -0.5,	// kiri bawah
-		0.0, 0.0		// tengah
+		// -0.9, 0.9,
+		// -0.1, 0.9,
+		// -0.1, 0.1,
+		// -0.9, 0.1,
+
+		-0.675, 0.7,	// A: ujung kiri atas
+		-0.6, 0.765,
+		-0.5, 0.8,		// B: tengah atas
+		-0.4, 0.765,
+		-0.325, 0.7,
+		-0.325, 0.625,
+		-0.35, 0.55,	// C
+		-0.425, 0.5,
+		-0.5, 0.5,		// D: tengah
+		-0.425, 0.5,
+		-0.35, 0.45,	// E
+		-0.325, 0.375,
+		-0.325, 0.3,
+		-0.4, 0.235,
+		-0.5, 0.2,		// F: tengah bawah
+		-0.6, 0.235,
+		-0.675, 0.3,	// G: ujung kiri bawah
 	]
+
+	var isPoint = 0
+	var points = vertices.length / 2
 
 	var buffer = gl.createBuffer()
 	gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
@@ -62,5 +78,5 @@ function main() {
 
 	gl.clear(gl.COLOR_BUFFER_BIT)
 
-	gl.drawArrays(gl.TRIANGLE_FAN, 0, 8)
+	gl.drawArrays(isPoint ? gl.POINTS : gl.LINE_STRIP, 0, points)
 }

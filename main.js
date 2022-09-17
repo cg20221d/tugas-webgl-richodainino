@@ -136,23 +136,40 @@ function draw() {
 		// 0.9, -0.9,
 		// 0.1, -0.9,
 
-		0.325, -0.8,	// A: ujung kiri bawah
-		0.325, -0.2,	// B: ujung kiri atas
-		0.5, -0.2,		// C: tengah atas
-		0.675, -0.2,	// D: ujung kanan atas
-		0.675, -0.8,	// E: ujung kanan bawah
-		0.5, -0.8,		// F: tengah bawah
-
+		// 0.325, -0.8,	// A: ujung kiri bawah
+		// 0.325, -0.2,	// B: ujung kiri atas
+		// 0.5, -0.2,		// C: tengah atas
+		// 0.675, -0.2,	// D: ujung kanan atas
+		// 0.675, -0.8,	// E: ujung kanan bawah
+		// 0.5, -0.8,		// F: tengah bawah
+		
 		// atas
-
-
-		// kiri
-
-
-		// bawah
-
-
+		0.45, -0.2,
+		0.55, -0.2,
+		
+		// kanan atas
+		0.64, -0.275,
+		
 		// kanan
+		0.675, -0.4,
+		0.675, -0.6,
+		
+		// kanan bawah
+		0.64, -0.725,
+		
+		// bawah
+		0.55, -0.8,
+		0.45, -0.8,
+
+		// kiri bawah
+		0.36, -0.725,
+		
+		// kiri
+		0.325, -0.6,
+		0.325, -0.4,
+		
+		// kiri atas
+		0.36, -0.275,
 	]
 
 	drawA(gl.LINE_STRIP, number3Vertices)

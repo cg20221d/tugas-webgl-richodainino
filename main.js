@@ -1,289 +1,448 @@
-var canvas, gl, vertexShaderCode, vertexShaderObject, fragmentShaderCode, fragmentShaderObject
-
 function main() {
-	/** @type {HTMLCanvasElement} */
-	canvas = document.getElementById("canvas")
-	gl = canvas.getContext("webgl")
+	var canvas = document.getElementById("canvas");
+	var gl = canvas.getContext("webgl");
 
-	// Vertex Shader
-	vertexShaderCode = `
-	attribute vec2 aPosition;
-	void main() {
-		float x = aPosition.x;
-		float y = aPosition.y;
-		gl_PointSize = 5.0;
-		gl_Position = vec4(x, y, 0.0, 1.0);
-	}
-	`
-	vertexShaderObject = gl.createShader(gl.VERTEX_SHADER)
-	gl.shaderSource(vertexShaderObject, vertexShaderCode)
-	gl.compileShader(vertexShaderObject) // sampai sini jadi .o
-	
-	// Fragment Shader
-	fragmentShaderCode = `
-	precision mediump float;
-	void main() {
-		float r = 0.0;
-		float g = 0.0;
-		float b = 1.0;
-		gl_FragColor = vec4(r, g, b, 1.0);
-	}
-	`
-	fragmentShaderObject = gl.createShader(gl.FRAGMENT_SHADER)
-	gl.shaderSource(fragmentShaderObject, fragmentShaderCode)
-	gl.compileShader(fragmentShaderObject) // sampai sini jadi .o
+	var vertices6 = [
+		//Depan
+		2, 2, 0, 1, 0, 1,   // Index:  0 
+		2, -1.5, 0, 1, 0, 1,   // Index:  1
+		3.5, -1.5, 0, 1, 0, 1,   // Index:  2
+		3.5, 0.3, 0, 1, 0, 1,   // Index:  3
+		2.4, 0.3, 0, 1, 0, 1,   // Index:  4
+		2.4, 1.5, 0, 1, 0, 1,   // Index:  5  
+		3.5, 1.5, 0, 1, 0, 1,   // Index:  6
+		3.5, 2, 0, 1, 0, 1,   // Index:  7
+		2, 2, 0, 1, 0, 1,   // Index:  8
+		//Kotak
+		2.4, -1, 0, 1, 0, 1,   // Index:  9
+		3.2, -1, 0, 1, 0, 1,   // Index:  10
+		3.2, -0.2, 0, 1, 0, 1,   // Index:  11
+		2.4, -0.2, 0, 1, 0, 1,   // Index:  12
+		//Belakang x  -0,3 +0,5
+		1.7, 2.5, -0.5, 1, 0, 1,   // Index:  13 
+		1.7, -1, -0.5, 1, 0, 1,   // Index:  14
+		3.2, -1, -0.5, 1, 0, 1,   // Index:  15
+		3.2, 0.8, -0.5, 1, 0, 1,   // Index:  16
+		2.1, 0.8, -0.5, 1, 0, 1,   // Index:  17
+		2.1, 2, -0.5, 1, 0, 1,   // Index:  18 
+		3.2, 2, -0.5, 1, 0, 1,   // Index:  19
+		3.2, 2.5, -0.5, 1, 0, 1,   // Index:  20
+		1.7, 2.5, -0.5, 1, 0, 1,   // Index:  21
+		//Kotak Belakang
+		2.1, -0.5, -0.5, 1, 0, 1,   // Index:  22
+		2.9, -0.5, -0.5, 1, 0, 1,   // Index:  23
+		2.9, 0.3, -0.5, 1, 0, 1,   // Index:  24
+		2.1, 0.3, -0.5, 1, 0, 1,   // Index:  25
+	];
 
-	shaderProgram = gl.createProgram() // wadah dari .exe
-	gl.attachShader(shaderProgram, vertexShaderObject)
-	gl.attachShader(shaderProgram, fragmentShaderObject)
-	gl.linkProgram(shaderProgram)
-	gl.useProgram(shaderProgram)
-
-	draw()
-}
-
-function draw() {
-	gl.clearColor(1.0, 0.65, 0, 1.0)
-	gl.clear(gl.COLOR_BUFFER_BIT)
-
-	var number3Vertices = [
-		// -0.9, 0.9,
-		// -0.1, 0.9,
-		// -0.1, 0.1,
-		// -0.9, 0.1,
-
-		-0.675, 0.7,	// A: ujung kiri atas
-		-0.6, 0.765,
-		-0.5, 0.8,		// B: tengah atas
-		-0.4, 0.765,
-		-0.325, 0.7,
-		-0.325, 0.625,
-		-0.35, 0.55,	// C
-		-0.425, 0.5,
-		-0.5, 0.5,		// D: tengah
-		-0.425, 0.5,
-		-0.35, 0.45,	// E
-		-0.325, 0.375,
-		-0.325, 0.3,
-		-0.4, 0.235,
-		-0.5, 0.2,		// F: tengah bawah
-		-0.6, 0.235,
-		-0.675, 0.3,	// G: ujung kiri bawah
-	]
-
-	var number6Vertices = [
-		// 0.1, 0.9,
-		// 0.9, 0.9,
-		// 0.9, 0.1,
-		// 0.1, 0.1,
-
-		0.675, 0.65,// A: kanan atas
-		0.61, 0.76,
-		0.5, 0.8,		// B: tengah atas
-		0.39, 0.76,
-		0.325, 0.65,// C
-		0.325, 0.35,// D: kiri bawah
-		0.39, 0.25,
-		0.5, 0.2,		// E: tengah bawah
-		0.61, 0.25,
-		0.675, 0.35,
-		0.675, 0.45,// F
-		0.61, 0.55,
-		0.5, 0.6,		// G: tengah
-		0.39, 0.55,
-		0.325, 0.45,
-	]
-
-	var letterNVertices = [
-		// -0.9, -0.1,
-		// -0.1, -0.1,
-		// -0.1, -0.9,
-		// -0.9, -0.9,
-
-		// -0.675, -0.8,	// A: ujung kiri bawah
-		// -0.675, -0.2,	// B: ujung kiri atas
-		// -0.325, -0.8,	// C: ujung kanan bawah
-		// -0.325, -0.2,	// D: ujung kanan atas
-
-		// left part
-		-0.7, -0.8,
-		-0.6, -0.8,
-		-0.7, -0.2,
-		-0.6, -0.2,
-		-0.6, -0.8,
-		-0.7, -0.2,
+	var indices6 = [
+		0, 1,	1, 2,	2, 3,
+		3, 4, 4, 5, 5, 6,
+		6, 7, 7, 8, 9, 10,
+		10, 11, 11, 12, 12, 9,
+		13, 14, 14, 15, 15, 16,
+		16, 17, 17, 18, 18, 19,
+		19, 20, 20, 21, 22, 23,
+		23, 24, 24, 25, 25, 22,
 		
-		// mid part
-		-0.6, -0.2,
-		-0.6, -0.4,
-		-0.4, -0.8,
-		-0.4, -0.8,
-		-0.4, -0.6,
-		-0.6, -0.2,
-		
-		// right part
-		-0.4, -0.8,
-		-0.3, -0.8,
-		-0.4, -0.2,
-		-0.3, -0.2,
-		-0.3, -0.8,
-		-0.4, -0.2,
-	]
+		0, 13, 1, 14, 2, 15,
+		3, 16, 4, 17, 5, 18,
+		6, 19, 7, 20, 8, 21,
+		9, 22, 10, 23, 11, 24,
+		12, 25
+	];
 
-	var letterOVertices = [
-		// 0.1, -0.1,
-		// 0.9, -0.1,
-		// 0.9, -0.9,
-		// 0.1, -0.9,
+	var verticesO = [
+		// Char O Outer Front     // Black
+		0.25, -0.25, 0.0, 0, 0, 0,    // Index:  0
+		0.35, -0.15, 0.0, 0, 0, 0,    // Index:  1
+		0.7, -0.15, 0.0, 0, 0, 0,    // Index:  2
+		0.8, -0.25, 0.0, 0, 0, 0,    // Index:  3
+		0.8, -0.7, 0.0, 0, 0, 0,    // Index:  4
+		0.7, -0.7, 0.0, 0, 0, 0,    // Index:  5
+		0.7, -0.25, 0.0, 0, 0, 0,    // Index:  6
+		0.8, -0.25, 0.0, 0, 0, 0,    // Index:  7
+		0.8, -0.7, 0.0, 0, 0, 0,    // Index:  8
+		0.7, -0.8, 0.0, 0, 0, 0,    // Index:  9
+		0.35, -0.8, 0.0, 0, 0, 0,    // Index:  10
+		0.25, -0.7, 0.0, 0, 0, 0,    // Index:  11
+		0.35, -0.7, 0.0, 0, 0, 0,    // Index:  12
+		0.35, -0.25, 0.0, 0, 0, 0,    // Index:  13
+		0.25, -0.25, 0.0, 0, 0, 0,    // Index:  14
 
-		// 0.325, -0.8,	// A: ujung kiri bawah
-		// 0.325, -0.2,	// B: ujung kiri atas
-		// 0.5, -0.2,		// C: tengah atas
-		// 0.675, -0.2,	// D: ujung kanan atas
-		// 0.675, -0.8,	// E: ujung kanan bawah
-		// 0.5, -0.8,		// F: tengah bawah
-		
-		// atas
-		0.45, -0.2,
-		0.55, -0.2,
-		0.47, -0.3,		// inside
-		0.55, -0.2,
-		0.47, -0.3,
-		0.53, -0.3,		// inside
-		
+		// Char O Outer Front     // White
+		0.25, -0.25, -0.2, 1, 1, 1,    // Index:  15
+		0.35, -0.15, -0.2, 1, 1, 1,    // Index:  16
+		0.7, -0.15, -0.2, 1, 1, 1,    // Index:  17
+		0.8, -0.25, -0.2, 1, 1, 1,    // Index:  18
+		0.8, -0.7, -0.2, 1, 1, 1,    // Index:  19
+		0.7, -0.7, -0.2, 1, 1, 1,    // Index:  20
+		0.7, -0.25, -0.2, 1, 1, 1,    // Index:  21
+		0.8, -0.25, -0.2, 1, 1, 1,    // Index:  22
+		0.8, -0.7, -0.2, 1, 1, 1,    // Index:  23
+		0.7, -0.8, -0.2, 1, 1, 1,    // Index:  24
+		0.35, -0.8, -0.2, 1, 1, 1,    // Index:  25
+		0.25, -0.7, -0.2, 1, 1, 1,    // Index:  26
+		0.35, -0.7, -0.2, 1, 1, 1,    // Index:  27
+		0.35, -0.25, -0.2, 1, 1, 1,    // Index:  28
+		0.25, -0.25, -0.2, 1, 1, 1,    // Index:  29
+		0.35, -0.25, -0.2, 1, 1, 1,    // Index:  30
+		0.35, -0.7, -0.2, 1, 1, 1,    // Index:  31
+		0.25, -0.7, -0.2, 1, 1, 1,    // Index:  32
+		0.25, -0.25, -0.2, 1, 1, 1,    // Index:  33
+	];
 
-		// kanan atas
-		0.55, -0.2,
-		0.53, -0.3,
-		0.64, -0.275,	// outside anchor
+	var indicesO = [
+		// Char O Outer Front
+		0, 1, 2, 0, 2, 3,
+		4, 5, 6, 4, 6, 7,
+		8, 9, 10, 8, 10, 11,
+		11, 12, 13, 11, 13, 14,
+		15, 16, 17, 15, 17, 18,
+		19, 20, 21, 19, 21, 22,
 
-		0.53, -0.3,
-		0.64, -0.275,
-		0.57, -0.35,	// inside anchor
-		
-		0.64, -0.275,
-		0.57, -0.35,
-		0.59, -0.42,
-		
-		0.64, -0.275,
-		0.59, -0.42,
-		0.675, -0.4,
-		
-		
-		// kanan
-		0.675, -0.4,
-		0.675, -0.6,
-		0.59, -0.42,	// inside
-		0.675, -0.6,
-		0.59, -0.42,
-		0.59, -0.58,	// inside
-		
-		// kanan bawah
-		0.675, -0.6,
-		0.59, -0.58,
-		0.64, -0.725,	// outside anchor
+		// Char O Outer Back
+		23, 24, 25, 23, 25, 26,
+		27, 28, 29, 27, 29, 30,
+		31, 32, 33, 31, 33, 34,
+		35, 36, 37, 35, 37, 38,
+		39, 40,
+	];
 
-		0.59, -0.58,
-		0.64, -0.725,
-		0.57, -0.65,	// inside anchor
-		
-		0.64, -0.725,
-		0.57, -0.65,
-		0.53, -0.7,
-		
-		0.64, -0.725,
-		0.53, -0.7,
-		0.55, -0.8,
-		
-		
-		// bawah
-		0.55, -0.8,
-		0.45, -0.8,
-		0.47, -0.7,		// inside
-		0.55, -0.8,
-		0.47, -0.7,
-		0.53, -0.7,		// inside
-		
-		// kiri bawah
-		0.45, -0.8,
-		0.47, -0.7,
-		0.36, -0.725,	// outside anchor
-		
-		0.47, -0.7,
-		0.36, -0.725,
-		0.43, -0.65,	// inside anchor
-		
-		0.36, -0.725,
-		0.43, -0.65,
-		0.41, -0.58,
+	var DEFAULT_VERT = [
+		1.0, 1.0, 1.0, 1.0, 0.4, 1.0,
+		-1.0, 1.0, 1.0, 1.0, 0.4, 1.0,
+		-1.0, -1.0, 1.0, 1.0, 0.4, 1.0,
+		1.0, -1.0, 1.0, 1.0, 0.4, 1.0, // v0-v1-v2-v3 front white
 
-		0.36, -0.725,
-		0.41, -0.58,
-		0.325, -0.6,
-		
+		1.0, 1.0, 1.0, 0.4, 0.4, 1.0,
+		1.0, -1.0, 1.0, 0.4, 0.4, 1.0,
+		1.0, -1.0, -1.0, 0.4, 0.4, 1.0,
+		1.0, 1.0, -1.0, 0.4, 0.4, 1.0, // v0-v3-v4-v5 right(white)
 
-		// kiri
-		0.325, -0.6,
-		0.325, -0.4,
-		0.41, -0.42,	// inside
-		0.325, -0.6,
-		0.41, -0.42,
-		0.41, -0.58,	// inside
-		
-		// kiri atas
-		0.325, -0.4,
-		0.41, -0.42,
-		0.36, -0.275,	// outside anchor
-		
-		0.41, -0.42,
-		0.36, -0.275,
-		0.43, -0.35,	// inside anchor
+		1.0, 1.0, 1.0, 0.4, 1.0, 0.4,
+		1.0, 1.0, -1.0, 0.4, 1.0, 0.4,
+		-1.0, 1.0, -1.0, 0.4, 1.0, 0.4,
+		-1.0, 1.0, 1.0, 0.4, 1.0, 0.4,  // v0-v5-v6-v1 up
 
-		0.36, -0.275,
-		0.43, -0.35,
-		0.45, -0.2,
-		
-		0.43, -0.35,
-		0.45, -0.2,
-		0.47, -0.3,
-	]
+		-1.0, 1.0, 1.0, 1.0, 0.4, 0.4,
+		-1.0, 1.0, -1.0, 1.0, 0.4, 0.4,
+		-1.0, -1.0, -1.0, 1.0, 0.4, 0.4,
+		-1.0, -1.0, 1.0, 1.0, 0.4, 0.4,  // v1-v6-v7-v2 left
 
-	drawA(gl.LINE_STRIP, number3Vertices)
-	drawA(gl.LINE_STRIP, number6Vertices)
-	drawA(gl.TRIANGLES, letterNVertices)
-	drawA(gl.TRIANGLES, letterOVertices)
-}
+		-1.0, -1.0, -1.0, 1.0, 1.0, 0.4,
+		1.0, -1.0, -1.0, 1.0, 1.0, 0.4,
+		1.0, -1.0, 1.0, 1.0, 1.0, 0.4,
+		-1.0, -1.0, 1.0, 1.0, 1.0, 0.4,   // v7-v4-v3-v2 down
 
-function drawA(type, vertices) {
-	var n = initBuffers(vertices)
-	if (n < 0) {
-		console.log("Failed to set the positions of the vertices")
-		return
-	}
+		1.0, -1.0, -1.0, 0.4, 1.0, 1.0,
+		-1.0, -1.0, -1.0, 0.4, 1.0, 1.0,
+		-1.0, 1.0, -1.0, 0.4, 1.0, 1.0,
+		1.0, 1.0, -1.0, 0.4, 1.0, 1.0    // v4-v7-v6-v5 back
+	];
 
-	gl.drawArrays(type, 0, n)
-}
+	var DEFAULT_INDICES = new Uint8Array([
+		0, 1, 2, 0, 2, 3,
+		4, 5, 6, 4, 6, 7,
+		8, 9, 10, 8, 10, 11,
+		12, 13, 14, 12, 14, 15,
+		16, 17, 18, 16, 18, 19,
+		20, 21, 22, 20, 22, 23,
+		24, 25, 26, 24, 26, 27,
+    28, 29, 30, 28, 30, 31
+	]);
 
-function initBuffers(vertices) {
-	var n = vertices.length / 2
+	var objects = [
+		{
+			name: '6',
+			vertices: vertices6,
+			indices: indices6,
+			length: 16,
+			type: gl.LINE_LOOP,
+		},
+		{
+			name: 'O',
+			vertices: verticesO,
+			indices: indicesO,
+			length: 7,
+			type: gl.TRIANGLES,
+		},
+		{
+			name: 'Cube',
+			vertices: DEFAULT_VERT,
+			indices: DEFAULT_INDICES,
+			length: 12,
+			type: gl.TRIANGLES,
+		},
+	];
 
-	var buffer = gl.createBuffer()
-	if (!buffer) {
-		console.log("Failed to create the buffer object")
-		return -1
-	}
+	// Vertex shader
+	var vertexShaderCode = `
+  attribute vec3 aPosition;
+  attribute vec3 aColor;
+  uniform mat4 uModel;
+  uniform mat4 uView;
+  uniform mat4 uProjection;
+  varying vec3 vColor;
+  void main() {
+      gl_Position = uProjection * uView * uModel * vec4(aPosition, 1.0);
+      vColor = aColor;
+  }
+  `;
+	var vertexShaderObject = gl.createShader(gl.VERTEX_SHADER);
+	gl.shaderSource(vertexShaderObject, vertexShaderCode);
+	gl.compileShader(vertexShaderObject);   // sampai sini sudah jadi .o
 
-	gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
-	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW)
+	// Fragment shader
+	var fragmentShaderCode = `
+  precision mediump float;
+  varying vec3 vColor;
+  void main() {
+      gl_FragColor = vec4(vColor, 1.0);
+  }
+  `;
+	var fragmentShaderObject = gl.createShader(gl.FRAGMENT_SHADER);
+	gl.shaderSource(fragmentShaderObject, fragmentShaderCode);
+	gl.compileShader(fragmentShaderObject);   // sampai sini sudah jadi .o
 
-	// Mengajari GPU cara mengoleksi nilai posisi dari ARRAY_BUFFER untuk setiap verteks yang diproses
-	var aPosition = gl.getAttribLocation(shaderProgram, "aPosition")
-	if (aPosition < 0) {
-		console.log("Failed to get the storage location of aPosition")
-		return -1
+	var shaderProgram = gl.createProgram(); // wadah dari executable (.exe)
+	gl.attachShader(shaderProgram, vertexShaderObject);
+	gl.attachShader(shaderProgram, fragmentShaderObject);
+	gl.linkProgram(shaderProgram);
+	gl.useProgram(shaderProgram);
+
+	// Variabel lokal
+	var theta = 0.0;
+	var freeze = false;
+	var frameWidth = 9;
+	var horizontalSpeed = 0.0097; // NRP akhir 097
+	var verticalSpeed = 0.0;
+	var horizontalDelta = 0.0;
+	var verticalDelta = 0.0;
+	var scaleDelta = 0.0;
+	var scaleSpeed = 0.05;
+	var freezeN = 0;
+	var freezeO = 0;
+	var thetaX = 0.0;
+	var thetaY = 0.0;
+	var thetaZ = -20;
+
+	// Variabel pointer ke GLSL
+	var uModel = gl.getUniformLocation(shaderProgram, "uModel");
+	// View
+	var cameraX = 0.0;
+	var cameraZ = 7.5;
+	var uView = gl.getUniformLocation(shaderProgram, "uView");
+	var view = mat4.create();
+	mat4.lookAt(
+		view,
+		[cameraX, 0.0, cameraZ],    // the location of the eye or the camera
+		[cameraX, 0.0, -10],        // the point where the camera look at
+		[0.0, 1.0, 0.0]
+	);
+	// Projection
+	var uProjection = gl.getUniformLocation(shaderProgram, "uProjection");
+	var perspective = mat4.create();
+
+	mat4.perspective(perspective, Math.PI / 3, 1.0, 0.5, 50);
+
+	function drawing(vertices, indices, start = 0, end, glType) {
+		const buffer = gl.createBuffer();
+		const indexBuffer = gl.createBuffer();
+
+		// bind buffer
+		gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
+
+		const aPosition = gl.getAttribLocation(shaderProgram, 'aPosition');
+		const aColor = gl.getAttribLocation(shaderProgram, 'aColor');
+		// variable pointer ke GLSL
+		gl.vertexAttribPointer(aPosition, 3, gl.FLOAT, false,
+			6 * Float32Array.BYTES_PER_ELEMENT,
+			0 * Float32Array.BYTES_PER_ELEMENT
+		);
+		gl.enableVertexAttribArray(aPosition);
+
+		// gl.drawArrays(glType, start, end);
+
+		gl.vertexAttribPointer(aColor, 3, gl.FLOAT, false,
+			6 * Float32Array.BYTES_PER_ELEMENT,
+			3 * Float32Array.BYTES_PER_ELEMENT
+		);
+		gl.enableVertexAttribArray(aColor);
+
+		gl.drawElements(glType, indices.length - 11, gl.UNSIGNED_SHORT, 0);
 	}
 
-	gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0)
-	gl.enableVertexAttribArray(aPosition)
-	return n
+	function animate6(i) {
+		var model = mat4.create();
+
+    if (scaleDelta >= 2 || scaleDelta <= -0.5) {
+        scaleSpeed = scaleSpeed * -1;
+    }
+    scaleDelta += scaleSpeed;
+    mat4.translate(model, model, [0, 0, scaleDelta]);
+    
+    var uModel = gl.getUniformLocation(shaderProgram, "uModel");
+    var uView = gl.getUniformLocation(shaderProgram, "uView");
+    var uProjection = gl.getUniformLocation(shaderProgram, "uProjection"); 
+    gl.uniformMatrix4fv(uModel,false, model);
+    gl.uniformMatrix4fv(uView, false, view);
+    gl.uniformMatrix4fv(uProjection, false, perspective);
+    drawing(objects[i].vertices, objects[i].indices, 0, objects[i].length, objects[i].type);
+	}
+
+	var freezeC = 0;
+	var freezeC1 = 0
+
+	function onKeyDown(event) {
+		if (event.keyCode == 37) { // left arrow
+			freezeN = 1;
+		} else if (event.keyCode == 39) { // right arrow
+			freezeN = 2;
+		} else if (event.keyCode == 38) { // up arrow
+			freezeO = 1;
+		} else if (event.keyCode == 40) { // down arrow
+			freezeO = 2;
+		} else if (event.keyCode == 74) {
+      freezeC = 1;
+    } else if (event.keyCode == 76) {
+      freezeC = 2;
+    } else if (event.keyCode == 73) {
+      freezeC1 = 1;
+    }  else if (event.keyCode == 75) {
+      freezeC1 = 2;
+		}
+	}
+
+	function onKeyUp(event) {
+		if (event.keyCode == 37) {
+			freezeN = 0;
+		} else if (event.keyCode == 39) {
+			freezeN = 0;
+		} else if (event.keyCode == 38) {
+			freezeO = 0;
+		} else if (event.keyCode == 40) {
+			freezeO = 0;
+		} else if (event.keyCode == 74) {
+      freezeC = 0;
+    } else if (event.keyCode == 76) {
+      freezeC = 0;
+    } else if (event.keyCode == 73) {
+      freezeC1 = 0;
+    }  else if (event.keyCode == 75) {
+      freezeC1 = 0;
+		}
+	}
+
+	document.addEventListener("keydown", onKeyDown);
+	document.addEventListener("keyup", onKeyUp);
+
+	function animateO(i) {
+		var modelx = mat4.create();
+		mat4.rotateX(modelx, modelx, thetaX);
+		if (freezeO == 1) {
+			thetaX -= 0.05;
+		} else if (freezeO == 2) {
+			thetaX += 0.05;
+		}
+
+		var uModel = gl.getUniformLocation(shaderProgram, "uModel");
+		var uView = gl.getUniformLocation(shaderProgram, "uView");
+		var uProjection = gl.getUniformLocation(shaderProgram, "uProjection");
+		gl.uniformMatrix4fv(uModel, false, modelx);
+		gl.uniformMatrix4fv(uView, false, view);
+		gl.uniformMatrix4fv(uProjection, false, perspective);
+		drawing(objects[i].vertices, objects[i].indices, 0, objects[i].length, objects[i].type);
+	}
+
+	function animateCube(i) {
+    var modelx = mat4.create();
+    mat4.translate(modelx, modelx, [0, 0, thetaZ]);
+
+    if (freezeC == 1) {
+      thetaX -= 0.05;
+    } else if (freezeC == 2) {
+      thetaX += 0.05;
+    }
+
+    if (freezeC1 == 1) {
+      thetaZ += 0.05;
+    } else if (freezeC1 == 2) {
+      thetaZ -= 0.05;
+    }
+
+    if (thetaX >= (frameWidth+5) || thetaX <= (-frameWidth-5)) {
+      freezeC = 0;
+  }
+
+    mat4.translate(modelx, modelx, [thetaX, 0, 0]);
+
+    var uModel = gl.getUniformLocation(shaderProgram, "uModel");
+    var uView = gl.getUniformLocation(shaderProgram, "uView");
+    var uProjection = gl.getUniformLocation(shaderProgram, "uProjection");
+    gl.uniformMatrix4fv(uModel, false, modelx);
+    gl.uniformMatrix4fv(uView, false, view);
+    gl.uniformMatrix4fv(uProjection, false, perspective);
+    drawing(objects[i].vertices, objects[i].indices, 0, objects[i].length, objects[i].type);
+  }
+
+	// Kita mengajari GPU bagaimana caranya mengoleksi
+	//  nilai posisi dari ARRAY_BUFFER
+	//  untuk setiap verteks yang sedang diproses
+	var aPosition = gl.getAttribLocation(shaderProgram, "aPosition");
+	gl.vertexAttribPointer(aPosition, 3, gl.FLOAT, false,
+		6 * Float32Array.BYTES_PER_ELEMENT,
+		0);
+	gl.enableVertexAttribArray(aPosition);
+	var aColor = gl.getAttribLocation(shaderProgram, "aColor");
+	gl.vertexAttribPointer(aColor, 3, gl.FLOAT, false,
+		6 * Float32Array.BYTES_PER_ELEMENT,
+		3 * Float32Array.BYTES_PER_ELEMENT);
+	gl.enableVertexAttribArray(aColor);
+
+	// Grafika interaktif
+	// Tetikus
+	function onMouseClick(event) {
+		freeze = !freeze;
+	}
+	document.addEventListener("click", onMouseClick);
+	// Papan ketuk
+	function onKeydown(event) {
+		if (event.keyCode == 32) freeze = !freeze;  // spasi
+		// Gerakan horizontal: a ke kiri, d ke kanan
+		if (event.keyCode == 65) {  // a
+			horizontalSpeed = -0.01;
+		} else if (event.keyCode == 68) {   // d
+			horizontalSpeed = 0.01;
+		}
+		// Gerakan vertikal: w ke atas, s ke bawah
+		if (event.keyCode == 87) {  // w
+			verticalSpeed = -0.01;
+		} else if (event.keyCode == 83) {   // s
+			verticalSpeed = 0.01;
+		}
+	}
+	function onKeyup(event) {
+		if (event.keyCode == 32) freeze = !freeze;
+		if (event.keyCode == 65 || event.keyCode == 68) horizontalSpeed = 0.0;
+		if (event.keyCode == 87 || event.keyCode == 83) verticalSpeed = 0.0;
+	}
+	document.addEventListener("keydown", onKeydown);
+	document.addEventListener("keyup", onKeyup);
+
+	function render() {
+		gl.enable(gl.DEPTH_TEST);
+		gl.clearColor(1.0, 0.65, 0.0, 1.0);
+		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+		
+		animate6(0);
+		animateO(1);
+		animateCube(2);
+		requestAnimationFrame(render);
+	}
+	requestAnimationFrame(render);
 }
